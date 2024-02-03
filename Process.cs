@@ -10,8 +10,10 @@ namespace SortFIlesDown
             {
                 
                 await GetFoldersAndFiles();
+
+                await Task.Delay(TimeSpan.FromMinutes(5));
             }
-             await Task.Delay(TimeSpan.FromMinutes(5));
+           
         }
 
         private async static Task GetFoldersAndFiles()
@@ -64,7 +66,7 @@ namespace SortFIlesDown
            await Task.FromResult(0);
         }
         private static void MoveFiles(ref Queue<string> pathFiles, ref IEnumerable<string> fileList, ref FileInfo fileInfo)
-        {
+         {
             try
             {
                 foreach (var file in fileList)
@@ -79,12 +81,20 @@ namespace SortFIlesDown
 
                         if (folder.EndsWith(fileInfoDate) && folder.ToLower().Contains(fileInfo.Extension.Replace('.', '-').ToLower()))
                         {
-                            File.Move(file, Path.Combine(folder, fileInfo.Name));
-                        }
+                            Console.WriteLine(fileInfo.Name);
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Console.WriteLine(folder);
+                            Console.ReadLine();
 
+                            File.Move(file, Path.Combine(folder, fileInfo.Name));
+
+                            break;
+                        }
+                         
                     }
 
-                    pathFiles.Dequeue();
+                 
                 }
             }catch(Exception) { }
         }
