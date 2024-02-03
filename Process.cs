@@ -12,14 +12,13 @@ namespace SortFIlesDown
 
                 await Task.Delay(TimeSpan.FromMinutes(5));
             }
-           
         }
 
         private async static Task GetFoldersAndFiles()
         {
             try
             {
-                var currentUser = @"C:\Users\seuUser\";
+                var currentUser = @"C:\Users\SeuUser\";
                 var fullPath = Path.Combine(currentUser, "Downloads");
                 var queueFiles = Directory.EnumerateFiles(fullPath);
                 var fileInfo = new FileInfo(fullPath);
@@ -35,13 +34,13 @@ namespace SortFIlesDown
 
                     if (!Directory.Exists(folderName))
                         Directory.CreateDirectory(folderName).Create();
-
+                
                 }
+                
                 var pahtFiles = new Queue<string>();
 
                 foreach (var queueDirectories in Directory.EnumerateDirectories(fullPath))
                 {
-
                     foreach (var queue in queueFiles)
                     {
                         fileInfo = new FileInfo(queue);
@@ -49,7 +48,6 @@ namespace SortFIlesDown
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName).Create();
-
 
                         if (!pahtFiles.Contains(folderName))
                             pahtFiles.Enqueue(folderName);
@@ -65,13 +63,12 @@ namespace SortFIlesDown
            await Task.FromResult(0);
         }
         private static void MoveFiles(ref Queue<string> pathFiles, ref IEnumerable<string> fileList, ref FileInfo fileInfo)
-         {
+        {
             try
             {
                 foreach (var file in fileList)
                 {
                     fileInfo = new FileInfo(file);
-
 
                     foreach (var folder in pathFiles)
                     {
@@ -81,7 +78,10 @@ namespace SortFIlesDown
                         if (folder.EndsWith(fileInfoDate) && folder.ToLower().Contains(fileInfo.Extension.Replace('.', '-').ToLower()))
                         {
 
-                            File.Move(file, Path.Combine(folder, fileInfo.Name));
+                             var result = fileExistsInPath(folder, fileInfo.Name, fileInfo.Extension);
+                            
+                             File.Move(file, result);
+                            Console.WriteLine("Passei aqui e movi");
 
                             break;
                         }
@@ -91,6 +91,22 @@ namespace SortFIlesDown
                  
                 }
             }catch(Exception) { }
+        }
+        private static string  fileExistsInPath(string directory, string file, string extension)
+        {
+
+            var fullPath = Path.Combine(directory, file);
+
+            if (!File.Exists(fullPath))
+            {
+               return  fullPath;
+            }
+
+            file = file.Replace(extension, "");
+
+            var newFileName = Path.Combine(directory, $"{file}-Copy-{DateTime.Now.Nanosecond}{extension}");
+
+            return newFileName;
         }
 
     }
