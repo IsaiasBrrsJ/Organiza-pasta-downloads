@@ -19,7 +19,7 @@ namespace SortFIlesDown
         {
             try
             {
-                var currentUser = @"C:\Users\a897212\";
+                var currentUser = @"C:\Users\seuUser\";
                 var fullPath = Path.Combine(currentUser, "Downloads");
                 var queueFiles = Directory.EnumerateFiles(fullPath);
                 var fileInfo = new FileInfo(fullPath);
