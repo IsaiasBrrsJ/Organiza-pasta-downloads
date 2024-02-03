@@ -8,7 +8,6 @@ namespace SortFIlesDown
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                
                 await GetFoldersAndFiles();
 
                 await Task.Delay(TimeSpan.FromMinutes(5));
@@ -20,7 +19,7 @@ namespace SortFIlesDown
         {
             try
             {
-                var currentUser = @"C:\Users\SeuUser\";
+                var currentUser = @"C:\Users\a897212\";
                 var fullPath = Path.Combine(currentUser, "Downloads");
                 var queueFiles = Directory.EnumerateFiles(fullPath);
                 var fileInfo = new FileInfo(fullPath);
@@ -46,7 +45,7 @@ namespace SortFIlesDown
                     foreach (var queue in queueFiles)
                     {
                         fileInfo = new FileInfo(queue);
-                        var folderName = Path.Combine(queueDirectories, $"{fileInfo.CreationTimeUtc.ToShortDateString().Replace("/", "-")}");
+                        var folderName = Path.Combine(queueDirectories, $"{fileInfo.LastWriteTimeUtc.ToShortDateString().Replace("/", "-")}");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName).Create();
@@ -76,16 +75,11 @@ namespace SortFIlesDown
 
                     foreach (var folder in pathFiles)
                     {
-                        var fileInfoDate = fileInfo.CreationTimeUtc.ToShortDateString().Replace("/", "-");
+                        var fileInfoDate = fileInfo.LastWriteTimeUtc.ToShortDateString().Replace("/", "-");
 
 
                         if (folder.EndsWith(fileInfoDate) && folder.ToLower().Contains(fileInfo.Extension.Replace('.', '-').ToLower()))
                         {
-                            Console.WriteLine(fileInfo.Name);
-                            Console.WriteLine();
-                            Console.WriteLine();
-                            Console.WriteLine(folder);
-                            Console.ReadLine();
 
                             File.Move(file, Path.Combine(folder, fileInfo.Name));
 
