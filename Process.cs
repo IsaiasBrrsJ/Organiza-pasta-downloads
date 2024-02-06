@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 
 namespace SortFIlesDown
 {
@@ -18,7 +19,7 @@ namespace SortFIlesDown
         {
             try
             {
-                var currentUser = @"C:\Users\SeuUser\";
+                var currentUser = @"C:\Users\a897212\";
                 var fullPath = Path.Combine(currentUser, "Downloads");
                 var queueFiles = Directory.EnumerateFiles(fullPath);
                 var fileInfo = new FileInfo(fullPath);
@@ -46,7 +47,7 @@ namespace SortFIlesDown
                         fileInfo = new FileInfo(queue);
                         var folderName = Path.Combine(queueDirectories, $"{fileInfo.LastWriteTimeUtc.ToShortDateString().Replace("/", "-")}");
 
-                        if (!Directory.Exists(folderName))
+                        if (!Directory.Exists(folderName) && folderName.Contains(fileInfo.Extension.Replace(".", "-")))
                             Directory.CreateDirectory(folderName).Create();
 
                         if (!pahtFiles.Contains(folderName))
@@ -81,13 +82,13 @@ namespace SortFIlesDown
                              var result = fileExistsInPath(folder, fileInfo.Name, fileInfo.Extension);
                             
                              File.Move(file, result);
-                            Console.WriteLine("Passei aqui e movi");
 
                             break;
                         }
                          
                     }
 
+                    pathFiles.Dequeue();
                  
                 }
             }catch(Exception) { }
