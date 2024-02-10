@@ -31,14 +31,14 @@ namespace SortFIlesDown
                 {
                     fileInfo = new FileInfo(queueFile);
 
-                    var folderName = Path.Combine(fullPath, $"Arquivos-{fileInfo.Extension.Trim('.')}");
+                    var folderName = Path.Combine(fullPath, $"Arquivos-{fileInfo.Extension.Trim('.').ToLower()}");
 
                     if (!Directory.Exists(folderName))
                         Directory.CreateDirectory(folderName).Create();
                 
                 }
                 
-                var pahtFiles = new Queue<string>();
+                var pahtFiles = new List<string>();
 
                 foreach (var queueDirectories in Directory.EnumerateDirectories(fullPath))
                 {
@@ -51,11 +51,14 @@ namespace SortFIlesDown
                             Directory.CreateDirectory(folderName).Create();
 
                         if (!pahtFiles.Contains(folderName))
-                            pahtFiles.Enqueue(folderName);
+                            pahtFiles.Add(folderName);
                     }
                 }
 
                 MoveFiles(ref pahtFiles, ref queueFiles, ref fileInfo);
+
+                pahtFiles.Clear();
+             
             }
             catch(Exception)
             {
@@ -63,7 +66,7 @@ namespace SortFIlesDown
             }
            await Task.FromResult(0);
         }
-        private static void MoveFiles(ref Queue<string> pathFiles, ref IEnumerable<string> fileList, ref FileInfo fileInfo)
+        private static void MoveFiles(ref List<string> pathFiles, ref IEnumerable<string> fileList, ref FileInfo fileInfo)
         {
             try
             {
@@ -88,8 +91,7 @@ namespace SortFIlesDown
                          
                     }
 
-                    pathFiles.Dequeue();
-                 
+                   
                 }
             }catch(Exception) { }
         }
