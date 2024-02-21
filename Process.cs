@@ -22,10 +22,11 @@ namespace SortFIlesDown
                 var currentUser = @"C:\Users\SeuUser\";
                 var fullPath = Path.Combine(currentUser, "Downloads");
                 var queueFiles = Directory.EnumerateFiles(fullPath);
-                var fileInfo = new FileInfo(fullPath);
-
                 if (!queueFiles.Any())
                     return;
+            
+                var fileInfo = new FileInfo(fullPath);
+                var directoriesToMove = new List<string>();
 
                 foreach (var queueFile in queueFiles)
                 {
@@ -35,19 +36,22 @@ namespace SortFIlesDown
 
                     if (!Directory.Exists(folderName))
                         Directory.CreateDirectory(folderName).Create();
+
+                    if(!directoriesToMove.Contains(folderName))
+                     directoriesToMove.Add(folderName);
                 
                 }
                 
                 var pahtFiles = new List<string>();
 
-                foreach (var queueDirectories in Directory.EnumerateDirectories(fullPath))
+                foreach (var queueDirectories in directoriesToMove)
                 {
                     foreach (var queue in queueFiles)
                     {
                         fileInfo = new FileInfo(queue);
                         var folderName = Path.Combine(queueDirectories, $"{fileInfo.LastWriteTimeUtc.ToShortDateString().Replace("/", "-")}");
 
-                        if (!Directory.Exists(folderName) && folderName.Contains(fileInfo.Extension.Replace(".", "-")))
+                        if (!Directory.Exists(folderName) && folderName.Contains(fileInfo.Extension.Replace(".", "-").ToLower()))
                             Directory.CreateDirectory(folderName).Create();
 
                         if (!pahtFiles.Contains(folderName))
